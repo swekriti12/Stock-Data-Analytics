@@ -10,6 +10,7 @@ from alpha_vantage.fundamentaldata import FundamentalData
 import stocknews
 from stocknews import StockNews
 from styledSt import st
+
 #Function to get S&P 500 tickers dynamically
 def get_sp500_tickers():
     #Use Wikipedia's S&P 500 list to fetch tickers
