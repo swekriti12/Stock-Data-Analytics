@@ -9,8 +9,28 @@ from alpha_vantage.fundamentaldata import FundamentalData
 import stocknews
 from stocknews import StockNews
 
+#Function to get S&P 500 tickers dynamically
+def get_sp500_tickers():
+    #Use Wikipedia's S&P 500 list to fetch tickers
+    url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+    tables = pd.read_html(url)
+    df = tables[0]
+    tickers = df['Symbol'].tolist()  # Extract the tickers from the 'Symbol' column
+    return tickers
+
+# Get the list of tickers
+tickers_list = get_sp500_tickers()
+
 st.title('Stock Market Analysis Dashboard')
-ticker = st.sidebar.text_input('Ticker', 'GOOGL')
+
+# Create a dropdown menu with a search bar to allow users to select a ticker or enter a custom ticker
+ticker = st.sidebar.selectbox('Select Ticker', tickers_list + ['Other'], key="ticker_dropdown", index=tickers_list.index('GOOGL') if 'GOOGL' in tickers_list else 0)
+
+# If 'Other' is selected, allow user to enter a custom ticker
+if ticker == 'Other':
+    ticker = st.sidebar.text_input('Enter Ticker Symbol', 'GOOGL')
+
+#ticker = st.sidebar.text_input('Ticker', 'GOOGL')
 start_date = st.sidebar.date_input('Start Date', pd.Timestamp('2023-01-01'))
 end_date = st.sidebar.date_input('End Date', pd.Timestamp('2024-01-01'))
 
@@ -30,7 +50,12 @@ else:
             yaxis_title='Adj Close'
         )
         
-        st.plotly_chart(fig)
+        # Update hover data to show the correct label
+        fig.update_traces(
+            hovertemplate='<b>%{x}</b><br>Adj Close: %{y}<extra></extra>'  # Customize hover text
+        )
+        
+        st.plotly_chart(fig, key=f"{ticker}_plot")
 
         pricing_data, fundamental_data, news = st.tabs(["Pricing Data", "Fundamental Data", "News"])
 
@@ -65,7 +90,26 @@ else:
             else:
                 st.warning("No pricing data available.")
 
+
         with fundamental_data:
+            def get_fundamental_data(ticker):
+                stock = yf.Ticker(ticker)
+                info = stock.info
+                market_cap = info.get('marketCap', 'N/A')
+                pe_ratio = info.get('trailingPE', 'N/A')
+                eps = info.get('epsTrailingTwelveMonths', 'N/A')
+                dividend_yield = info.get('dividendYield', 'N/A')
+                return market_cap, pe_ratio, eps, dividend_yield
+
+            with fundamental_data:
+                st.subheader('Key Metrics')
+                market_cap, pe_ratio, eps, dividend_yield = get_fundamental_data(ticker)
+                st.write(f"**Market Cap**: {market_cap}")
+                st.write(f"**P/E Ratio**: {pe_ratio}")
+                st.write(f"**EPS**: {eps}")
+                st.write(f"**Dividend Yield**: {dividend_yield}")
+            
+            
             #key = 'KMNZTW37RQIUSB1K'
             key = 'IY9P5YA3GKL31DRJ'
             fd = FundamentalData(key, output_format = 'pandas')
@@ -90,6 +134,7 @@ else:
             cf.columns = list(cash_flow.T.iloc[0])  # Set the new column names
             cf.index = cf.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
             st.write(cf)
+
         
         with news:
             st.header(f'Top 5 News for {ticker}')
