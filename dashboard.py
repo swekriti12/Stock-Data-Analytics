@@ -21,6 +21,17 @@ def get_sp500_tickers():
     tickers = df['Symbol'].tolist()  
     return tickers
 
+neutral_threshold = 0.1  # Adjust this as per your use case
+
+# Function to determine sentiment
+def classify_sentiment(ratio):
+    if ratio > 0.5 + neutral_threshold:
+        return "Positive"
+    elif ratio < 0.5 - neutral_threshold:
+        return "Negative"
+    else:
+        return "Neutral"
+
 #Get the list of all tickers
 tickers_list = get_sp500_tickers()
 
@@ -137,8 +148,9 @@ else:
                 st.write(f"**Dividend Yield**: {dividend_yield}")
             
             
-            #key = 'KMNZTW37RQIUSB1K'
-            key = 'IY9P5YA3GKL31DRJ'
+            # key = 'KMNZTW37RQIUSB1K'
+            # key = 'IY9P5YA3GKL31DRJ'
+            key = 'Y1XI5SU13KB3VK8H'
             fd = FundamentalData(key, output_format = 'pandas')
 
             st.subheader('Balance Sheet')
@@ -183,5 +195,5 @@ else:
                 title_sentiment = df_news['sentiment_title'][i]
                 news_sentiment = df_news['sentiment_summary'][i]
                 st.write("Sentiments:")
-                st.write(f"Title Sentiment: {title_sentiment}")
-                st.write(f"News Sentiment: {news_sentiment}")
+                st.write(f"Title Sentiment: {classify_sentiment(title_sentiment)}")
+                st.write(f"News Sentiment: {classify_sentiment(news_sentiment)}")
