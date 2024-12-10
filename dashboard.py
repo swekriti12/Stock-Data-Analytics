@@ -135,7 +135,7 @@ else:
                 info = stock.info
                 market_cap = info.get('marketCap', 'N/A')
                 pe_ratio = info.get('trailingPE', 'N/A')
-                eps = info.get('epsTrailingTwelveMonths', 'N/A')
+                eps = info.get('trailingEps', 'N/A')
                 dividend_yield = info.get('dividendYield', 'N/A')
                 return market_cap, pe_ratio, eps, dividend_yield
 
