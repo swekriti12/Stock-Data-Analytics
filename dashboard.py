@@ -1,4 +1,5 @@
 #Import necessary libraries
+import streamlit as st
 import pandas as pd
 import numpy as np
 import yfinance as yf
@@ -9,7 +10,9 @@ import alpha_vantage
 from alpha_vantage.fundamentaldata import FundamentalData
 import stocknews
 from stocknews import StockNews
-from styledSt import st
+
+with open("./streamlit.css") as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 #Function to get S&P 500 tickers dynamically
 def get_sp500_tickers():
@@ -150,29 +153,29 @@ else:
             
             # key = 'KMNZTW37RQIUSB1K'
             # key = 'IY9P5YA3GKL31DRJ'
-            key = 'Y1XI5SU13KB3VK8H'
-            fd = FundamentalData(key, output_format = 'pandas')
+            # key = 'Y1XI5SU13KB3VK8H'
+            # fd = FundamentalData(key, output_format = 'pandas')
 
-            st.subheader('Balance Sheet')
-            balance_sheet = fd.get_balance_sheet_annual(ticker[0])[0]  # Get the DataFrame from the tuple
-            bs = balance_sheet.T[2:]  # Transpose the DataFrame
-            bs.columns = list(balance_sheet.T.iloc[0])  # Set the new column names
-            bs.index = bs.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
-            st.write(bs)
+            # st.subheader('Balance Sheet')
+            # balance_sheet = fd.get_balance_sheet_annual(ticker[0])[0]  # Get the DataFrame from the tuple
+            # bs = balance_sheet.T[2:]  # Transpose the DataFrame
+            # bs.columns = list(balance_sheet.T.iloc[0])  # Set the new column names
+            # bs.index = bs.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
+            # st.write(bs)
 
-            st.subheader('Income Statement')
-            income_statement = fd.get_income_statement_annual(ticker)[0]  # Get the DataFrame from the tuple
-            is1 = income_statement.T[2:]  # Transpose the DataFrame
-            is1.columns = list(income_statement.T.iloc[0])  # Set the new column names
-            is1.index = is1.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
-            st.write(is1)
+            # st.subheader('Income Statement')
+            # income_statement = fd.get_income_statement_annual(ticker)[0]  # Get the DataFrame from the tuple
+            # is1 = income_statement.T[2:]  # Transpose the DataFrame
+            # is1.columns = list(income_statement.T.iloc[0])  # Set the new column names
+            # is1.index = is1.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
+            # st.write(is1)
 
-            st.subheader('Cash Flow Statement')
-            cash_flow = fd.get_cash_flow_annual(ticker)[0]  # Get the DataFrame from the tuple
-            cf = cash_flow.T[2:]  # Transpose the DataFrame
-            cf.columns = list(cash_flow.T.iloc[0])  # Set the new column names
-            cf.index = cf.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
-            st.write(cf)
+            # st.subheader('Cash Flow Statement')
+            # cash_flow = fd.get_cash_flow_annual(ticker)[0]  # Get the DataFrame from the tuple
+            # cf = cash_flow.T[2:]  # Transpose the DataFrame
+            # cf.columns = list(cash_flow.T.iloc[0])  # Set the new column names
+            # cf.index = cf.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
+            # st.write(cf)
 
         
         with news:
