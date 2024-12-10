@@ -10,6 +10,7 @@ from alpha_vantage.fundamentaldata import FundamentalData
 import stocknews
 from stocknews import StockNews
 from styledSt import st
+
 #Function to get S&P 500 tickers dynamically
 def get_sp500_tickers():
     #Use Wikipedia's S&P 500 list to fetch tickers
@@ -24,7 +25,7 @@ def get_sp500_tickers():
 tickers_list = get_sp500_tickers()
 
 #Set title for the dashboard
-st.title('Stock Market Analysis Dashboard')
+st.title('Stock Market Dashboard')
 
 #Create a dropdown menu with a search bar to allow users to select a ticker or enter a custom ticker
 ticker = st.sidebar.selectbox('Select Ticker', tickers_list + ['Other'], key="ticker_dropdown", index=tickers_list.index('GOOGL') if 'GOOGL' in tickers_list else 0)
