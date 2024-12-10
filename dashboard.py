@@ -24,7 +24,7 @@ def get_sp500_tickers():
 tickers_list = get_sp500_tickers()
 
 #Set title for the dashboard
-st.title('Stock Market Analysis Dashboard')
+st.title('Stock Market Dashboard')
 
 #Create a dropdown menu with a search bar to allow users to select a ticker or enter a custom ticker
 ticker = st.sidebar.selectbox('Select Ticker', tickers_list + ['Other'], key="ticker_dropdown", index=tickers_list.index('GOOGL') if 'GOOGL' in tickers_list else 0)
@@ -47,6 +47,13 @@ end_date = st.sidebar.date_input('End Date', end_date_default, max_value=end_dat
 if start_date > end_date:
     st.sidebar.error("Start Date must be earlier than End Date!")
     start_date = end_date - datetime.timedelta(days=365)
+
+# Add the group name and student names to the sidebar
+for i in range(19):
+    st.sidebar.markdown(" ")
+
+st.sidebar.markdown("###### *Created by Big Data Analytics Students:*")
+st.sidebar.markdown("###### *Anish Saini, Ashish Thapa, Manushi Khadka, Siddhant Praveen Kapse, Swekriti Poudel*")
 
 #If the ticket has not been selected or input provide a error message
 if not ticker:
