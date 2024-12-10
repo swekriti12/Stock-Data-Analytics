@@ -1,5 +1,4 @@
 #Import necessary libraries
-import streamlit as st
 import pandas as pd
 import numpy as np
 import yfinance as yf
@@ -10,7 +9,7 @@ import alpha_vantage
 from alpha_vantage.fundamentaldata import FundamentalData
 import stocknews
 from stocknews import StockNews
-
+from styledSt import st
 #Function to get S&P 500 tickers dynamically
 def get_sp500_tickers():
     #Use Wikipedia's S&P 500 list to fetch tickers
