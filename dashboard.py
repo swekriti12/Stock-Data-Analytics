@@ -187,7 +187,9 @@ else:
     
             for i in range(5):
                 st.subheader(f"{i + 1}. {df_news['title'][i]}")
-                st.write(f"Date: {df_news['published'][i]}")
+                date_obj = datetime.datetime.strptime(df_news['published'][i], "%a, %d %b %Y %H:%M:%S %z")
+                formatted_date = date_obj.strftime("%a, %d %b %Y")
+                st.write(f"Date: {formatted_date}")
                 st.write(f"Summary: {df_news['summary'][i]}")
 
                 # Check if there's a link column and display the link (if available)
