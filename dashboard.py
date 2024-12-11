@@ -192,15 +192,8 @@ else:
                 st.write(f"Date: {formatted_date}")
                 st.write(f"Summary: {df_news['summary'][i]}")
 
-                # Check if there's a link column and display the link (if available)
-                if 'link' in df_news.columns:
-                    st.write(f"Link: [Read More]({df_news['link'][i]})")
-                else:
-                    st.write("Link: Not available")
-
                 # Sentiment analysis output
                 title_sentiment = df_news['sentiment_title'][i]
                 news_sentiment = df_news['sentiment_summary'][i]
-                st.write("Sentiments:")
                 st.write(f"Title Sentiment: {classify_sentiment(title_sentiment)}")
                 st.write(f"News Sentiment: {classify_sentiment(news_sentiment)}")
