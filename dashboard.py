@@ -11,6 +11,9 @@ from alpha_vantage.fundamentaldata import FundamentalData
 import stocknews
 from stocknews import StockNews
 
+with open("./streamlit.css") as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 #Function to get S&P 500 tickers dynamically
 def get_sp500_tickers():
     #Use Wikipedia's S&P 500 list to fetch tickers
@@ -20,6 +23,17 @@ def get_sp500_tickers():
     #Extract the tickers from the 'Symbol' column
     tickers = df['Symbol'].tolist()  
     return tickers
+
+neutral_threshold = 0.1  # Adjust this as per your use case
+
+# Function to determine sentiment
+def classify_sentiment(ratio):
+    if ratio > 0.5 + neutral_threshold:
+        return "Positive"
+    elif ratio < 0.5 - neutral_threshold:
+        return "Negative"
+    else:
+        return "Neutral"
 
 #Get the list of all tickers
 tickers_list = get_sp500_tickers()
@@ -48,6 +62,15 @@ end_date = st.sidebar.date_input('End Date', end_date_default, max_value=end_dat
 if start_date > end_date:
     st.sidebar.error("Start Date must be earlier than End Date!")
     start_date = end_date - datetime.timedelta(days=365)
+
+# Add the group name and student names to the sidebar
+st.sidebar.markdown(f"""
+<div class="group-name">
+<span> Created by Big Data Analytics Students: </span>
+<span> Anish Saini, Ashish Thapa, Manushi Khadka, Siddhant Praveen Kapse, Swekriti Poudel </span>
+</div>
+""", 
+unsafe_allow_html=True)
 
 #If the ticket has not been selected or input provide a error message
 if not ticker:
@@ -117,7 +140,7 @@ else:
                 info = stock.info
                 market_cap = info.get('marketCap', 'N/A')
                 pe_ratio = info.get('trailingPE', 'N/A')
-                eps = info.get('epsTrailingTwelveMonths', 'N/A')
+                eps = info.get('trailingEps', 'N/A')
                 dividend_yield = info.get('dividendYield', 'N/A')
                 return market_cap, pe_ratio, eps, dividend_yield
 
@@ -130,30 +153,31 @@ else:
                 st.write(f"**Dividend Yield**: {dividend_yield}")
             
             
-            #key = 'KMNZTW37RQIUSB1K'
-            key = 'IY9P5YA3GKL31DRJ'
-            fd = FundamentalData(key, output_format = 'pandas')
+            # key = 'KMNZTW37RQIUSB1K'
+            # key = 'IY9P5YA3GKL31DRJ'
+            # key = 'Y1XI5SU13KB3VK8H'
+            # fd = FundamentalData(key, output_format = 'pandas')
 
-            st.subheader('Balance Sheet')
-            balance_sheet = fd.get_balance_sheet_annual(ticker[0])[0]  # Get the DataFrame from the tuple
-            bs = balance_sheet.T[2:]  # Transpose the DataFrame
-            bs.columns = list(balance_sheet.T.iloc[0])  # Set the new column names
-            bs.index = bs.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
-            st.write(bs)
+            # st.subheader('Balance Sheet')
+            # balance_sheet = fd.get_balance_sheet_annual(ticker[0])[0]  # Get the DataFrame from the tuple
+            # bs = balance_sheet.T[2:]  # Transpose the DataFrame
+            # bs.columns = list(balance_sheet.T.iloc[0])  # Set the new column names
+            # bs.index = bs.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
+            # st.write(bs)
 
-            st.subheader('Income Statement')
-            income_statement = fd.get_income_statement_annual(ticker)[0]  # Get the DataFrame from the tuple
-            is1 = income_statement.T[2:]  # Transpose the DataFrame
-            is1.columns = list(income_statement.T.iloc[0])  # Set the new column names
-            is1.index = is1.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
-            st.write(is1)
+            # st.subheader('Income Statement')
+            # income_statement = fd.get_income_statement_annual(ticker)[0]  # Get the DataFrame from the tuple
+            # is1 = income_statement.T[2:]  # Transpose the DataFrame
+            # is1.columns = list(income_statement.T.iloc[0])  # Set the new column names
+            # is1.index = is1.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
+            # st.write(is1)
 
-            st.subheader('Cash Flow Statement')
-            cash_flow = fd.get_cash_flow_annual(ticker)[0]  # Get the DataFrame from the tuple
-            cf = cash_flow.T[2:]  # Transpose the DataFrame
-            cf.columns = list(cash_flow.T.iloc[0])  # Set the new column names
-            cf.index = cf.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
-            st.write(cf)
+            # st.subheader('Cash Flow Statement')
+            # cash_flow = fd.get_cash_flow_annual(ticker)[0]  # Get the DataFrame from the tuple
+            # cf = cash_flow.T[2:]  # Transpose the DataFrame
+            # cf.columns = list(cash_flow.T.iloc[0])  # Set the new column names
+            # cf.index = cf.index.str.replace('([a-z])([A-Z])', r'\1 \2', regex=True).str.title()
+            # st.write(cf)
 
         
         with news:
@@ -176,5 +200,5 @@ else:
                 title_sentiment = df_news['sentiment_title'][i]
                 news_sentiment = df_news['sentiment_summary'][i]
                 st.write("Sentiments:")
-                st.write(f"Title Sentiment: {title_sentiment}")
-                st.write(f"News Sentiment: {news_sentiment}")
+                st.write(f"Title Sentiment: {classify_sentiment(title_sentiment)}")
+                st.write(f"News Sentiment: {classify_sentiment(news_sentiment)}")

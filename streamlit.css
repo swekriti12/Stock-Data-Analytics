@@ -1,0 +1,42 @@
+.stMainBlockContainer {
+    max-width: 65rem;
+}
+
+/* Styling the tab list container */
+div[data-baseweb="tab-list"] {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect for the container */
+div[data-baseweb="tab-list"]:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.group-name {
+    margin-top: 160px;
+    width: 100%;
+    text-align: center;
+    background-color: #f0f0f0;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.group-name span {
+    display: block;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+    margin: 5px 0;/
+}
+
+.group-name span:first-child {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007BFF;
+}
