@@ -64,11 +64,13 @@ if start_date > end_date:
     start_date = end_date - datetime.timedelta(days=365)
 
 # Add the group name and student names to the sidebar
-for i in range(19):
-    st.sidebar.markdown(" ")
-
-st.sidebar.markdown("###### *Created by Big Data Analytics Students:*")
-st.sidebar.markdown("###### *Anish Saini, Ashish Thapa, Manushi Khadka, Siddhant Praveen Kapse, Swekriti Poudel*")
+st.sidebar.markdown(f"""
+<div class="group-name">
+<span> Created by Big Data Analytics Students: </span>
+<span> Anish Saini, Ashish Thapa, Manushi Khadka, Siddhant Praveen Kapse, Swekriti Poudel </span>
+</div>
+""", 
+unsafe_allow_html=True)
 
 #If the ticket has not been selected or input provide a error message
 if not ticker:
